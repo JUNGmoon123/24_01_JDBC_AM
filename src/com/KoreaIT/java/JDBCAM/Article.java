@@ -5,7 +5,8 @@ public class Article {
 	private int id;
 	private String title;
 	private String body;
-
+	
+	
 	public Article(int id, String title, String body) {
 		this.id = id;
 		this.title = title;
