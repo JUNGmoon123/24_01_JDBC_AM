@@ -2,93 +2,86 @@ package com.KoreaIT.java.JDBCAM.test;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.KoreaIT.java.JDBCAM.Article;
+
 public class JDBCSelectTest {
 	public static void main(String[] args) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
 
-        Connection conn = null;                // 데이터 베이스와 연결을 위한 객체
-        Statement stmt = null;        // SQL 문을 데이터베이스에 보내기위한 객체
-        ResultSet rs = null;                   // SQL 질의에 의해 생성된 테이블을 저장하는 객체
+		List<Article> articles = new ArrayList<>();
 
-        // 1. JDBC Driver Class - com.mysql.jdbc.Driver
-        String driver = "com.mysql.jdbc.Driver";
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			String url = "jdbc:mysql://127.0.0.1:3306/JDBC_AM?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeNehavior=convertToNull";
 
-        // 2. 데이터베이스에 연결하기 위한 정보
-        String url = "jdbc:mysql://127.0.0.1:3306/JDBC_AM?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeNehavior=convertToNull";
-        String user = "root";        // 데이터베이스 ID
-        String pw = "";              // 데이터베이스 PW
+			conn = DriverManager.getConnection(url, "root", "");
+			System.out.println("연결 성공!");
 
-        String SQL = "SELECT * FROM article ORDER BY id DESC";
+			String sql = "SELECT *";
+			sql += " FROM article";
+			sql += " ORDER BY id DESC;";
 
-        try {
-            // 1. JDBC 드라이버 로딩
-            Class.forName(driver);
+			System.out.println(sql);
 
-            // 2. Connection 객체 생성
-            conn = DriverManager.getConnection(url, user, pw); // DB 연결
+			pstmt = conn.prepareStatement(sql);
 
-            // 3. Statement 객체 생성
-            stmt = conn.createStatement();
+			rs = pstmt.executeQuery(sql);
 
-            // 4. SQL 문장을 실행하고 결과를 리턴
-            // stmt.excuteQuery(SQL) : select
-            // stmt.excuteUpdate(SQL) : insert, update, delete ..
-            rs = stmt.executeQuery(SQL);
+			while (rs.next()) {
+				int id = rs.getInt("id");
+				String regDate = rs.getString("regDate");
+				String updateDate = rs.getString("updateDate");
+				String title = rs.getString("title");
+				String body = rs.getString("body");
 
-            // 5. ResultSet에 저장된 데이터 얻기 - 결과가 2개 이상
-            while (rs.next()) {
+				Article article = new Article(id, regDate, updateDate, title, body);
 
-                String id = rs.getString("id");
-                String regDate = rs.getString("regDate");
-                String updateDate = rs.getString("updateDate");
-                String title = rs.getString("title");
-                String body = rs.getString("body"); //rs.getString("email");
+				articles.add(article);
 
-                System.out.println(id + " " + regDate + " " + updateDate + " " + title + " " + body);
-            }
+			}
+			for (int i = 0; i < articles.size(); i++) {
+				System.out.println("번호 : " + articles.get(i).getId());
+				System.out.println("등록 날짜 : " + articles.get(i).getRegDate());
+				System.out.println("수정 날짜 : " + articles.get(i).getUpdateDate());
+				System.out.println("제목 : " + articles.get(i).getTitle());
+				System.out.println("내용 : " + articles.get(i).getBody());
+			}
 
-            //5. ResultSet에 저장된 데이터 얻기 - 결과가 1개
-            // if(rs.next()) {
-            //
-            // }
-            // else {
-            //
-            // }
-        } catch (SQLException e) {
+		} catch (ClassNotFoundException e) {
+			System.out.println("드라이버 로딩 실패");
+		} catch (SQLException e) {
+			System.out.println("에러 : " + e);
+		} finally {
+			try {
+				if (rs != null && !rs.isClosed()) {
+					rs.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			try {
+				if (pstmt != null && !pstmt.isClosed()) {
+					pstmt.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			try {
+				if (conn != null && !conn.isClosed()) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 
-            System.out.println("SQL Error : " + e.getMessage());
-
-        } catch (ClassNotFoundException e1) {
-
-            System.out.println("[JDBC Connector Driver 오류 : " + e1.getMessage() + "]");
-
-        } finally {
-
-            //사용순서와 반대로 close 함
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (conn != null) {
-                try {
-                	conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
 	}
 }
