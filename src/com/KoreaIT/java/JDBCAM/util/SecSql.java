@@ -24,7 +24,7 @@ public class SecSql {
 	public boolean isInsert() {
 		return getFormat().startsWith("INSERT");
 	}
-
+	//OBject 는 자동으로 배열을 만들어준다, 인자가 몇개나 넘어올지 모를때 쓴다
 	public SecSql append(Object... args) {
 		if (args.length > 0) {
 			String sqlBit = (String) args[0];
@@ -52,7 +52,7 @@ public class SecSql {
 			int parameterIndex = i + 1;
 
 			if (data instanceof Integer) {
-				stmt.setInt(parameterIndex, (int) data);
+				stmt.setInt(parameterIndex, (int) data)   ;
 			} else if (data instanceof String) {
 				stmt.setString(parameterIndex, (String) data);
 			}

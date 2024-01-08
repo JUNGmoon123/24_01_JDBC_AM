@@ -23,7 +23,7 @@ public class DBUtil {
 
 		return rows.get(0);
 	}
-
+	
 	public static List<Map<String, Object>> selectRows(Connection dbConn, SecSql sql) throws SQLErrorException {
 		List<Map<String, Object>> rows = new ArrayList<>();
 

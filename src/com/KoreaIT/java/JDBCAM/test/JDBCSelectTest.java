@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,25 +36,25 @@ public class JDBCSelectTest {
 
 			rs = pstmt.executeQuery(sql);
 
-			while (rs.next()) {
-				int id = rs.getInt("id");
-				String regDate = rs.getString("regDate");
-				String updateDate = rs.getString("updateDate");
-				String title = rs.getString("title");
-				String body = rs.getString("body");
-
-				Article article = new Article(id, regDate, updateDate, title, body);
-
-				articles.add(article);
-
-			}
-			for (int i = 0; i < articles.size(); i++) {
-				System.out.println("번호 : " + articles.get(i).getId());
-				System.out.println("등록 날짜 : " + articles.get(i).getRegDate());
-				System.out.println("수정 날짜 : " + articles.get(i).getUpdateDate());
-				System.out.println("제목 : " + articles.get(i).getTitle());
-				System.out.println("내용 : " + articles.get(i).getBody());
-			}
+//			while (rs.next()) {
+//				int id = rs.getInt("id");
+//				LocalDateTime regDate = rs.get("regDate");
+//				LocalDateTime updateDate = rs.getString("updateDate");
+//				String title = rs.getString("title");
+//				String body = rs.getString("body");
+//
+//				Article article = new Article(id, regDate, updateDate, title, body);
+//
+//				articles.add(article);
+//
+////			}
+//			for (int i = 0; i < articles.size(); i++) {
+//				System.out.println("번호 : " + articles.get(i).getId());
+//				System.out.println("등록 날짜 : " + articles.get(i).getRegDate());
+//				System.out.println("수정 날짜 : " + articles.get(i).getUpdateDate());
+//				System.out.println("제목 : " + articles.get(i).getTitle());
+//				System.out.println("내용 : " + articles.get(i).getBody());
+//			}
 
 		} catch (ClassNotFoundException e) {
 			System.out.println("드라이버 로딩 실패");
