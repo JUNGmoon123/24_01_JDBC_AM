@@ -22,16 +22,17 @@ public class App {
 			String cmd = sc.nextLine().trim();
 
 			Connection conn = null;
-
+			
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
-
+			//포트번호 '/'뒤에 DB이름적어서 url로 전해준다.
 			String url = "jdbc:mysql://127.0.0.1:3306/JDBC_AM?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeNehavior=convertToNull";
 
 			try {
+				//url주소와 SQLyog를 생성할때 만든 아이디, 비번(설정없으면밑에처럼) 해서 접속을 시도한다.
 				conn = DriverManager.getConnection(url, "root", "");
 
 				int actionResult = doAction(conn, sc, cmd);
@@ -81,7 +82,8 @@ public class App {
 				System.out.println(sql);
 
 				pstmt = conn.prepareStatement(sql);
-
+				
+				//executeUpdate()함수는 int형정수를 반환한다.
 				int affectedRow = pstmt.executeUpdate();
 
 				System.out.println(affectedRow + "열에 적용됨");
@@ -179,6 +181,7 @@ public class App {
 			try {
 				String sql = "UPDATE article";
 				sql += " SET updateDate = NOW()";
+				//수정시 아무것도 입력안할경우 원래값을 그대로 전달한다.
 				if (title.length() > 0) {
 					sql += " ,title = '" + title + "'";
 				}
