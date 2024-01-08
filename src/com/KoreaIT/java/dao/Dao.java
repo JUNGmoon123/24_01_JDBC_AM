@@ -13,6 +13,7 @@ public class Dao {
 	PreparedStatement pstmt = null;
 	ResultSet rs = null;
 	
+	
 	try {
 		Class.forName("com.mysql.jdbc.Driver");
 		String url = "jdbc:mysql://127.0.0.1:3306/JDBC_AM?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeNehavior=convertToNull";
@@ -70,5 +71,5 @@ public class Dao {
 			e.printStackTrace();
 		}
 	}
-
+}
 
