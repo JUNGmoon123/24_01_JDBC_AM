@@ -219,8 +219,52 @@ public class App {
 			DBUtil.delete(conn, sql);
 
 			System.out.println(id + "번 글이 삭제되었습니다.");
+		}  else if (cmd.startsWith("member join")) {
+			
+			System.out.println("==회원가입==");
+			System.out.print("아이디 : ");
+			String loginId = sc.nextLine().trim();				
+			System.out.print("비밀번호 : ");
+			String pw = sc.nextLine().trim();
+			System.out.print("필수 입력 정보 : ");
+			String infor = sc.nextLine().trim();
+			
+			System.out.println("==회원가입==");
+
+			SecSql sql = new SecSql();
+//			INSERT INTO `member`
+//			VALUES (10,'ACCOUNTING','NEW YORK', ' ', ' ', ' ');
+			sql.append("INSERT INTO `member`(regDate, updateDate, loginId, loginPw, `name`)");
+			sql.append("VALUES (");
+			sql.append("NOW(),");
+			sql.append("NOW(),");
+			sql.append("? ,", loginId);
+			sql.append("? ,", pw);
+			sql.append("? )", infor);
+			int id = DBUtil.insert(conn, sql);
+			System.out.println(sql);
+			System.out.println(id+"번 회원이 생성되었습니다.");
+			
+			
+			sql = new SecSql();
+			sql.append("SELECT *");
+			sql.append("FROM `member`");
+			Map<String, Object> membersMap = DBUtil.selectRow(conn, sql);
+			Member member = new Member(membersMap);
+//			sql.append("WHERE id = ?;", id);
+			
+			System.out.println("번호 : " + member.getId());
+			System.out.println("작성날짜 : " + Util.getNowDate_TimeStr(member.getRegDate()));
+			System.out.println("수정날짜 : " + Util.getNowDate_TimeStr(member.getUpdateDate()));
+			System.out.println("로그인아이디 : " + member.getLoginId());
+			System.out.println("비밀번호 : " + member.getLoginPw());
+			System.out.println("필수입력 : " + member.getName());
+
+			
 		}
 
 		return 0;
 	}
+
+
 }
