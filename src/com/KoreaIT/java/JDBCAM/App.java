@@ -63,7 +63,92 @@ public class App {
 			return -1;
 		}
 
-		if (cmd.equals("article write")) {
+		if (cmd.equals("member join")) {
+			String loginId = null;
+			String loginPw = null;
+			String loginPwConfirm = null;
+			String name = null;
+
+			System.out.println("==회원가입==");
+			while (true) {
+				System.out.print("로그인 아이디 : ");
+				loginId = sc.nextLine().trim();
+
+				if (loginId.length() == 0 || loginId.contains(" ")) {
+					System.out.println("아이디 똑바로 입력해");
+					continue;
+				}
+
+				SecSql sql = new SecSql();
+				sql.append("SELECT COUNT(*) > 0");
+				sql.append("FROM `member`");
+				sql.append("WHERE loginId = ?;", loginId);
+
+				boolean isLoginIdDup = DBUtil.selectRowBooleanValue(conn, sql);
+
+				if (isLoginIdDup) {
+					System.out.println(loginId + "는(은) 이미 사용중");
+					continue;
+				}
+
+				break;
+			}
+			while (true) {
+				System.out.print("비밀번호 : ");
+				loginPw = sc.nextLine().trim();
+
+				if (loginPw.length() == 0 || loginPw.contains(" ")) {
+					System.out.println("비밀번호 똑바로 입력해");
+					continue;
+				}
+
+				boolean loginPwCheck = true;
+
+				while (true) {
+					System.out.print("비밀번호 확인: ");
+					loginPwConfirm = sc.nextLine().trim();
+
+					if (loginPwConfirm.length() == 0 || loginPwConfirm.contains(" ")) {
+						System.out.println("확인 똑바로 입력해");
+						continue;
+					}
+
+					if (loginPw.equals(loginPwConfirm) == false) {
+						System.out.println("일치하지 않아");
+						loginPwCheck = false;
+					}
+					break;
+				}
+
+				if (loginPwCheck) {
+					break;
+				}
+			}
+			while (true) {
+				System.out.print("이름  : ");
+				name = sc.nextLine().trim();
+
+				if (name.length() == 0 || name.contains(" ")) {
+					System.out.println("이름 똑바로 입력해");
+					continue;
+				}
+				break;
+			}
+
+			SecSql sql = new SecSql();
+
+			sql.append("INSERT INTO `member`");
+			sql.append("SET regDate = NOW(),");
+			sql.append("updateDate = NOW(),");
+			sql.append("loginId = ?,", loginId);
+			sql.append("loginPw = ?,", loginPw);
+			sql.append("`name` = ?;", name);
+
+			int id = DBUtil.insert(conn, sql);
+
+			System.out.println(id + "번 회원이 가입 되었습니다");
+
+		} else if (cmd.equals("article write")) {
 			System.out.println("==글쓰기==");
 			System.out.print("제목 : ");
 			String title = sc.nextLine();
@@ -197,13 +282,14 @@ public class App {
 				System.out.println("번호는 정수로 입력해");
 				return 0;
 			}
-
+			//SecSql함수가 DB에 데이터를 넣음, sql쿼리를 java에서 적은것 
 			SecSql sql = new SecSql();
 
 			sql.append("SELECT *");
 			sql.append("FROM article");
 			sql.append("WHERE id = ?;", id);
-
+			
+			//DBUtil은 DB의 데이터를 java로 가져온다. Map을 만들어서 키:값으로 가져옴
 			Map<String, Object> articleMap = DBUtil.selectRow(conn, sql);
 
 			if (articleMap.isEmpty()) {
@@ -219,52 +305,8 @@ public class App {
 			DBUtil.delete(conn, sql);
 
 			System.out.println(id + "번 글이 삭제되었습니다.");
-		}  else if (cmd.startsWith("member join")) {
-			
-			System.out.println("==회원가입==");
-			System.out.print("아이디 : ");
-			String loginId = sc.nextLine().trim();				
-			System.out.print("비밀번호 : ");
-			String pw = sc.nextLine().trim();
-			System.out.print("필수 입력 정보 : ");
-			String infor = sc.nextLine().trim();
-			
-			System.out.println("==회원가입==");
-
-			SecSql sql = new SecSql();
-//			INSERT INTO `member`
-//			VALUES (10,'ACCOUNTING','NEW YORK', ' ', ' ', ' ');
-			sql.append("INSERT INTO `member`(regDate, updateDate, loginId, loginPw, `name`)");
-			sql.append("VALUES (");
-			sql.append("NOW(),");
-			sql.append("NOW(),");
-			sql.append("? ,", loginId);
-			sql.append("? ,", pw);
-			sql.append("? )", infor);
-			int id = DBUtil.insert(conn, sql);
-			System.out.println(sql);
-			System.out.println(id+"번 회원이 생성되었습니다.");
-			
-			
-			sql = new SecSql();
-			sql.append("SELECT *");
-			sql.append("FROM `member`");
-			Map<String, Object> membersMap = DBUtil.selectRow(conn, sql);
-			Member member = new Member(membersMap);
-//			sql.append("WHERE id = ?;", id);
-			
-			System.out.println("번호 : " + member.getId());
-			System.out.println("작성날짜 : " + Util.getNowDate_TimeStr(member.getRegDate()));
-			System.out.println("수정날짜 : " + Util.getNowDate_TimeStr(member.getUpdateDate()));
-			System.out.println("로그인아이디 : " + member.getLoginId());
-			System.out.println("비밀번호 : " + member.getLoginPw());
-			System.out.println("필수입력 : " + member.getName());
-
-			
 		}
 
 		return 0;
 	}
-
-
 }
