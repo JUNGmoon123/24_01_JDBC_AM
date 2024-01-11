@@ -29,47 +29,28 @@ public class ArticleDao {
 		return DBUtil.insert(conn, sql);
 	}
 
-	public void showList() {
-
-		List<Article> articles = new ArrayList<>();
+	public Map<String, Object> getArticleById(int id) {
 
 		SecSql sql = new SecSql();
 
-		sql.append("SELECT *");
-		sql.append("FROM article");
-		sql.append("ORDER BY id DESC;");
-
-		List<Map<String, Object>> articleListMap = DBUtil.selectRows(conn, sql);
-
-		for (Map<String, Object> articleMap : articleListMap) {
-			articles.add(new Article(articleMap));
-			
-		}
-		if (articles.size() == 0) {
-			System.out.println("게시글이 없습니다");
-			
-		}
-
-		System.out.println("  번호  /   제목  ");
-		for (Article article : articles) {
-			System.out.printf("  %d     /   %s   \n", article.getId(), article.getTitle());
-		}
-	}
-
-	public int doModify(int id, String title, String body) {
-		SecSql sql = new SecSql();
 		sql.append("SELECT *");
 		sql.append("FROM article");
 		sql.append("WHERE id = ?;", id);
 
-		Map<String, Object> articleMap = DBUtil.selectRow(conn, sql);
+		return DBUtil.selectRow(conn, sql);
+	}
 
-		if (articleMap.isEmpty()) {
-			System.out.println(id + "번 글은 없습니다.");
-			return id;
-		}
+	public void doDelete(int id) {
+		SecSql sql = new SecSql();
 
-		sql = new SecSql();
+		sql.append("DELETE FROM article");
+		sql.append("WHERE id = ?;", id);
+
+		DBUtil.delete(conn, sql);
+	}
+
+	public void doUpdate(int id, String title, String body) {
+		SecSql sql = new SecSql();
 
 		sql.append("UPDATE article");
 		sql.append("SET updateDate = NOW()");
@@ -82,39 +63,24 @@ public class ArticleDao {
 		sql.append("WHERE id = ?;", id);
 
 		DBUtil.update(conn, sql);
-		return id;
+
 	}
 
-	public Map<String, Object> showDetail(int id) {
+	public List<Article> getArticles() {
 		SecSql sql = new SecSql();
 
 		sql.append("SELECT *");
 		sql.append("FROM article");
-		sql.append("WHERE id = ?;", id);
+		sql.append("ORDER BY id DESC;");
 
-		Map<String, Object> articleMap = DBUtil.selectRow(conn, sql);
+		List<Map<String, Object>> articleListMap = DBUtil.selectRows(conn, sql);
 
-//		Article article = new Article(articleMap);
-		return articleMap;
-	}
+		List<Article> articles = new ArrayList<>();
 
-	public Map<String, Object> doDelete(int id) {
-		
-		SecSql sql = new SecSql();
-
-		sql.append("SELECT *");
-		sql.append("FROM article");
-		sql.append("WHERE id = ?;", id);
-
-		Map<String, Object> articleMap = DBUtil.selectRow(conn, sql);
-
-		sql = new SecSql();
-
-		sql.append("DELETE FROM article");
-		sql.append("WHERE id = ?;", id);
-
-		DBUtil.delete(conn, sql);
-		return articleMap;
+		for (Map<String, Object> articleMap : articleListMap) {
+			articles.add(new Article(articleMap));
+		}
+		return articles;
 	}
 
 }
