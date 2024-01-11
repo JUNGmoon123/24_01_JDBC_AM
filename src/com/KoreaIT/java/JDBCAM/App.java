@@ -11,14 +11,16 @@ import com.KoreaIT.java.JDBCAM.controller.MemberController;
 
 public class App {
 
+	private Scanner sc;
+
+	public App() {
+		Container.init();
+		this.sc = Container.sc;
+	}
+
 	public void run() {
 		System.out.println("==프로그램 시작==");
-		Scanner sc = new Scanner(System.in);
-		
-		//스캐너와conn을 한곳에 모아서 공용자원으로 쓰게함.
-		Container.init();
-		
-		
+
 		while (true) {
 			System.out.print("명령어 > ");
 			String cmd = sc.nextLine().trim();
@@ -36,7 +38,9 @@ public class App {
 			try {
 				conn = DriverManager.getConnection(url, "root", "");
 
-				int actionResult = action(conn, sc, cmd);
+				Container.conn = conn;
+
+				int actionResult = action(cmd);
 
 				if (actionResult == -1) {
 					System.out.println("==프로그램 종료==");
@@ -58,19 +62,23 @@ public class App {
 		}
 	}
 
-	private int action(Connection conn, Scanner sc, String cmd) {
+	private int action(String cmd) {
 
 		if (cmd.equals("exit")) {
 			return -1;
 		}
 
-		MemberController memberController = new MemberController(conn, sc);
-		ArticleController articleController = new ArticleController(conn, sc);
+		MemberController memberController = Container.memberController;
+		ArticleController articleController = Container.articleController;
 
-		if (cmd.equals("member login")) {
+		if (cmd.equals("member logout")) {
+			memberController.logout();
+		} else if (cmd.equals("member login")) {
 			memberController.login();
 		} else if (cmd.equals("member join")) {
 			memberController.doJoin();
+		} else if (cmd.equals("member profile")) {
+			memberController.showProfile();
 		} else if (cmd.equals("article write")) {
 			articleController.doWrite();
 		} else if (cmd.equals("article list")) {
