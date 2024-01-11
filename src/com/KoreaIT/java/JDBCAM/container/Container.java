@@ -48,4 +48,9 @@ public class Container {
 
 	}
 
+	public static Container memberDao() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

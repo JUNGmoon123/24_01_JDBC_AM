@@ -7,6 +7,7 @@ public class Main {
 		try {
 			new App().run();
 		} catch (SQLErrorException e) {
+			//에러 메시지가 보이게 만듬.
 			System.err.println(e.getMessage());
 			e.getOrigin().printStackTrace();
 		}

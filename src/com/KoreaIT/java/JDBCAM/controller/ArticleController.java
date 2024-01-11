@@ -27,7 +27,9 @@ public class ArticleController {
 		System.out.print("내용 : ");
 		String body = Container.sc.nextLine();
 
-		int id = articleService.doWrite(title, body);
+		int memberId = Container.session.loginedMemberId;
+
+		int id = articleService.doWrite(memberId, title, body);
 
 		System.out.println(id + "번 글이 생성되었습니다");
 
@@ -43,9 +45,10 @@ public class ArticleController {
 			return;
 		}
 
-		System.out.println("  번호  /   제목  ");
+		System.out.println("  번호  /  작성자  /   제목  ");
 		for (Article article : articles) {
-			System.out.printf("  %d     /   %s   \n", article.getId(), article.getTitle());
+			System.out.printf("   %d     /   %s     /   %s   \n", article.getId(), article.getExtra__writer(),
+					article.getTitle());
 		}
 	}
 
@@ -107,6 +110,7 @@ public class ArticleController {
 		System.out.println("번호 : " + article.getId());
 		System.out.println("작성날짜 : " + Util.getNowDate_TimeStr(article.getRegDate()));
 		System.out.println("수정날짜 : " + Util.getNowDate_TimeStr(article.getUpdateDate()));
+		System.out.println("작성자 : " + article.getMemberId());
 		System.out.println("제목 : " + article.getTitle());
 		System.out.println("내용 : " + article.getBody());
 
