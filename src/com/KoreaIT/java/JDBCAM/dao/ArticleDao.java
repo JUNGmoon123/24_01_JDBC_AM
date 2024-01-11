@@ -24,16 +24,27 @@ public class ArticleDao {
 
 		return DBUtil.insert(Container.conn, sql);
 	}
-
-	public Map<String, Object> getArticleById(int id) {
-
+	//원래 Map<String, Object>메소드명이었으나 Article로 바꿈
+	public Article getArticleById(int id) {
+		
 		SecSql sql = new SecSql();
 
-		sql.append("SELECT *");
-		sql.append("FROM article");
-		sql.append("WHERE id = ?;", id);
+		sql.append("SELECT A.*, M.name AS extra__writer");
+		sql.append("FROM article AS A");
+		sql.append("INNER JOIN `member` AS M");
+		sql.append("ON A.memberId = M.id");
+		sql.append("WHERE A.id = ?;", id);
+		
+		
+		
+		//이부분에서 Map을 넘겨주면 
+		Map<String, Object> articleMap = DBUtil.selectRow(Container.conn, sql);
 
-		return DBUtil.selectRow(Container.conn, sql);
+		if (articleMap.isEmpty()) {
+			return null;
+		}
+		//Article로 러턴값을 준다.
+		return new Article(articleMap);
 	}
 
 	public void doDelete(int id) {
@@ -70,7 +81,8 @@ public class ArticleDao {
 		sql.append("INNER JOIN `member` AS M");
 		sql.append("ON A.memberId = M.id");
 		sql.append("ORDER BY id DESC;");
-
+		
+		//이 부분을 위에서 다시 만듬, Map을 Article로 받을려고
 		List<Map<String, Object>> articleListMap = DBUtil.selectRows(Container.conn, sql);
 
 		List<Article> articles = new ArrayList<>();

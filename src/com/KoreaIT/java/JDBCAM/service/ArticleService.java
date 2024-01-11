@@ -18,8 +18,8 @@ public class ArticleService {
 	public int doWrite(int memberId, String title, String body) {
 		return articleDao.doWrite(memberId,title, body);
 	}
-
-	public Map<String, Object> getArticleById(int id) {
+	//메소드명인 Map을 Article로 바꿈
+	public Article getArticleById(int id) {
 		return articleDao.getArticleById(id);
 	}
 
