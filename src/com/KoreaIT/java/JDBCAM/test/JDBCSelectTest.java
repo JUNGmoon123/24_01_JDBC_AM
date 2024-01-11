@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.KoreaIT.java.JDBCAM.Article;
 
 public class JDBCSelectTest {
 	public static void main(String[] args) {

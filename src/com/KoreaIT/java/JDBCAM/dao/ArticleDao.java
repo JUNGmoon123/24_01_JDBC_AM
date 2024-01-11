@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.KoreaIT.java.JDBCAM.Article;
+import com.KoreaIT.java.JDBCAM.dto.Article;
 import com.KoreaIT.java.JDBCAM.util.DBUtil;
 import com.KoreaIT.java.JDBCAM.util.SecSql;
 

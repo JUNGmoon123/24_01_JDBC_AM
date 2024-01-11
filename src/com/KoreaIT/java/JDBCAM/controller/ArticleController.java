@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-import com.KoreaIT.java.JDBCAM.Article;
+import com.KoreaIT.java.JDBCAM.dto.Article;
 import com.KoreaIT.java.JDBCAM.service.ArticleService;
 import com.KoreaIT.java.JDBCAM.util.Util;
 

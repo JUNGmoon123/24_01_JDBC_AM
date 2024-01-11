@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+import com.KoreaIT.java.JDBCAM.container.Container;
 import com.KoreaIT.java.JDBCAM.controller.ArticleController;
 import com.KoreaIT.java.JDBCAM.controller.MemberController;
 
@@ -13,7 +14,11 @@ public class App {
 	public void run() {
 		System.out.println("==프로그램 시작==");
 		Scanner sc = new Scanner(System.in);
-
+		
+		//스캐너와conn을 한곳에 모아서 공용자원으로 쓰게함.
+		Container.init();
+		
+		
 		while (true) {
 			System.out.print("명령어 > ");
 			String cmd = sc.nextLine().trim();
@@ -62,10 +67,10 @@ public class App {
 		MemberController memberController = new MemberController(conn, sc);
 		ArticleController articleController = new ArticleController(conn, sc);
 
-		if (cmd.equals("member join")) {
+		if (cmd.equals("member login")) {
+			memberController.login();
+		} else if (cmd.equals("member join")) {
 			memberController.doJoin();
-		} else if (cmd.equals("member login")) { 
-			memberController.doLogin(); 
 		} else if (cmd.equals("article write")) {
 			articleController.doWrite();
 		} else if (cmd.equals("article list")) {

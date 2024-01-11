@@ -4,8 +4,8 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 
-import com.KoreaIT.java.JDBCAM.Article;
 import com.KoreaIT.java.JDBCAM.dao.ArticleDao;
+import com.KoreaIT.java.JDBCAM.dto.Article;
 
 public class ArticleService {
 
