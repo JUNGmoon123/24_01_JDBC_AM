@@ -58,11 +58,14 @@ public class MemberController {
 		}
 
 		Member member = memberService.getMemberByLoginId(loginId);
-
+		
+		//비밀번호 시도 제한
 		int tryMaxCount = 3;
 		int tryCount = 0;
 
 		while (true) {
+			//0부터 3까지 총 3번의 시도를 하게 해줌
+			//밑에 일치하지 않거나 똑바로 입력하지 않을시 try횟수를 증가시켜서 다시 반복 최대3번까지.
 			if (tryCount >= tryMaxCount) {
 				System.out.println("다시 확인하고 시도해라");
 				break;
